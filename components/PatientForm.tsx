@@ -52,7 +52,7 @@ export default function PatientForm({
       } else {
         await patientAPI.create({
           idCard: idCard.trim(),
-          name: idCard.trim(),
+          name: 'N/A',
           dateOfBirth: new Date().toISOString().split('T')[0],
         });
       }

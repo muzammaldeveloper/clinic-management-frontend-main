@@ -667,7 +667,9 @@ export default function PatientList({
                             {patient.idCard}
                           </td>
                           <td className="px-4 lg:px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {patient.name}
+                            {patient.name && patient.name !== patient.idCard
+                              ? patient.name
+                              : <span className="text-gray-400">N/A</span>}
                           </td>
                           <td className="px-4 lg:px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                             <span className="px-2 py-1 bg-teal-100 text-teal-800 rounded-full text-xs font-medium">
@@ -719,7 +721,11 @@ export default function PatientList({
                           className="rounded border-gray-300 text-teal-600 focus:ring-teal-500 mt-1"
                         />
                         <div>
-                          <h3 className="font-semibold text-gray-900 text-sm">{patient.name}</h3>
+                          <h3 className="font-semibold text-gray-900 text-sm">
+                            {patient.name && patient.name !== patient.idCard
+                              ? patient.name
+                              : <span className="text-gray-400">N/A</span>}
+                          </h3>
                           <p className="text-xs text-gray-500">ID: {patient.idCard}</p>
                         </div>
                       </div>
