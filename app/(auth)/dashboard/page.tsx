@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import Sidebar from '@/components/Sidebar';
 import TopBar from '@/components/TopBar';
@@ -27,7 +27,6 @@ export default function DashboardPage() {
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
 
   useEffect(() => {
-    // Check authentication
     if (typeof window !== 'undefined') {
       if (!authAPI.isAuthenticated()) {
         router.push('/signin');
@@ -37,32 +36,33 @@ export default function DashboardPage() {
     }
   }, [router]);
 
-  const handleCreatePatient = () => {
+  const handleCreatePatient = useCallback(() => {
     setSelectedPatient(null);
     setShowPatientForm(true);
-  };
+  }, []);
 
-  const handleEditPatient = (patient: Patient) => {
+  const handleEditPatient = useCallback((patient: Patient) => {
     setSelectedPatient(patient);
     setShowPatientForm(true);
-  };
+  }, []);
 
-  const handleViewPatient = (patientId: string) => {
+  const handleViewPatient = useCallback((patientId: string) => {
     setSelectedPatientId(patientId);
-  };
+  }, []);
 
-  const handleFormSuccess = () => {
+  // Called after any create/update — increments trigger so PatientList re-fetches
+  const handleFormSuccess = useCallback(() => {
     setRefreshTrigger((prev) => prev + 1);
-  };
+  }, []);
 
-  const handleCloseForm = () => {
+  const handleCloseForm = useCallback(() => {
     setShowPatientForm(false);
     setSelectedPatient(null);
-  };
+  }, []);
 
-  const handleCloseDetails = () => {
+  const handleCloseDetails = useCallback(() => {
     setSelectedPatientId(null);
-  };
+  }, []);
 
   if (isCheckingAuth) {
     return (

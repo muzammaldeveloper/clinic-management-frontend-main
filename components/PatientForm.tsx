@@ -48,18 +48,17 @@ export default function PatientForm({
 
     try {
       if (isEditMode && patient?.id) {
-        // Update existing patient's CNIC
         await patientAPI.updateCnic(patient.id, idCard.trim());
       } else {
-        // Create new patient
         await patientAPI.create({
           idCard: idCard.trim(),
           name: idCard.trim(),
           dateOfBirth: new Date().toISOString().split('T')[0],
         });
       }
-      onSuccess();
+      // Close first, then trigger refresh — ensures list re-fetches with new data
       onClose();
+      onSuccess();
     } catch (err: any) {
       setError(err.message || 'Failed to save patient');
     } finally {
