@@ -27,6 +27,8 @@ export default function PatientForm({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
+  const isEditMode = !!patient?.id;
+
   useEffect(() => {
     setIdCard(patient?.idCard || '');
     setIdCardError('');
@@ -45,13 +47,14 @@ export default function PatientForm({
     setError('');
 
     try {
-      if (patient?.id) {
-        // Edit mode — CNIC is read-only, nothing to update here
-        // (extend if more fields are added later)
+      if (isEditMode && patient?.id) {
+        // Update existing patient's CNIC
+        await patientAPI.updateCnic(patient.id, idCard.trim());
       } else {
+        // Create new patient
         await patientAPI.create({
           idCard: idCard.trim(),
-          name: idCard.trim(),               // backend requires name; use CNIC as placeholder
+          name: idCard.trim(),
           dateOfBirth: new Date().toISOString().split('T')[0],
         });
       }
@@ -72,7 +75,7 @@ export default function PatientForm({
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
           <h2 className="text-lg font-bold text-gray-800">
-            {patient?.id ? 'Edit Patient' : 'Add New Patient'}
+            {isEditMode ? 'Edit CNIC' : 'Add New Patient'}
           </h2>
           <button
             onClick={onClose}
@@ -104,11 +107,11 @@ export default function PatientForm({
                 setIdCardError('');
                 setError('');
               }}
-              disabled={!!patient?.id}
               className={`w-full px-4 py-2.5 border text-black rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm transition-colors ${
-                idCardError ? 'border-red-300 bg-red-50' : 'border-gray-300'
-              } ${patient?.id ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'}`}
+                idCardError ? 'border-red-300 bg-red-50' : 'border-gray-300 bg-white'
+              }`}
               placeholder="e.g. 3520112345671"
+              autoFocus
             />
             {idCardError && (
               <p className="mt-1 text-xs text-red-600">{idCardError}</p>
@@ -130,7 +133,7 @@ export default function PatientForm({
               className="px-5 py-2 bg-gradient-to-r from-teal-500 to-blue-500 text-white rounded-xl hover:from-teal-600 hover:to-blue-600 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2 text-sm"
             >
               {loading && <Loader2 className="h-4 w-4 animate-spin" />}
-              <span>{patient?.id ? 'Update' : 'Add Patient'}</span>
+              <span>{isEditMode ? 'Update' : 'Add Patient'}</span>
             </button>
           </div>
         </form>

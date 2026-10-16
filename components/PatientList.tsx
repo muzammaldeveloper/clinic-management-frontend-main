@@ -686,7 +686,7 @@ export default function PatientList({
                               <button
                                 onClick={() => onEditPatient(patient)}
                                 className="p-2 text-teal-600 hover:bg-teal-50 rounded-lg transition-colors"
-                                title="Edit"
+                                title="Edit CNIC"
                               >
                                 <Edit className="h-4 w-4" />
                               </button>

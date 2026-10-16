@@ -108,6 +108,14 @@ export const patientAPI = {
     });
   },
 
+  // Update patient CNIC
+  updateCnic: async (id: string, idCard: string) => {
+    return apiRequest(`/patients/${id}/cnic`, {
+      method: 'PATCH',
+      body: JSON.stringify({ idCard }),
+    });
+  },
+
   // Delete patient
   delete: async (id: string) => {
     return apiRequest(`/patients/${id}`, {
